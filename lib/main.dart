@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => ScheduleProvider(),
-      child: MaterialApp(
+      child: const MaterialApp(
         title: 'mobility bay alloc',
-        home: const HomeScreen(),
+        home: HomeScreen(),
       ),
     );
   }
