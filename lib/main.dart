@@ -62,10 +62,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('mobility bay alloc'),
+        title: const Text(
+          'mobility bay alloc',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -113,15 +118,15 @@ class ScheduleData {
     return allocations.any((allocation) => allocation['date'] == dateString);
   }
 
-  Map<int, String>? getBayAssignments(DateTime date) {
+  Map<int, Person>? getBayAssignments(DateTime date) {
     final dateString = DateFormat('yyyy-MM-dd').format(date);
     final allocation = allocations.firstWhere(
       (allocation) => allocation['date'] == dateString,
       orElse: () => {},
     );
     if (allocation.isNotEmpty) {
-      return (allocation['bays'] as Map<String, dynamic>)
-          .map((key, value) => MapEntry(int.parse(key), value.toString()));
+      return (allocation['bays'] as Map<String, dynamic>).map(
+          (key, value) => MapEntry(int.parse(key), Person.fromJson(value)));
     }
     return null;
   }
@@ -235,17 +240,41 @@ class BayAssignmentWidget extends StatelessWidget {
             shrinkWrap: true,
             crossAxisCount: 4,
             children: assignments.entries.map((entry) {
+              final person = entry.value;
               return Card(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Bay ${entry.key}'),
-                    Text('Assigned: ${entry.value}'),
+                    Text('Assigned: ${person.name}'),
+                    CircleAvatar(
+                      // backgroundColor: Colors.blue,
+                      // child: Text('Cam'),
+                      backgroundImage: NetworkImage(person.picture),
+                    )
+                    // Image.asset(person.picture, height: 100, width: 100),
                   ],
                 ),
               );
             }).toList(),
           ),
+        const Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                      'Remember to mentioned in team if you are not coming in, so others can use your bay',
+                      style: TextStyle(
+                        fontSize: 16,
+                      )),
+                  Icon(
+                    Icons.favorite,
+                    color: Colors.pink,
+                    size: 24.0,
+                    semanticLabel: 'Text to announce in accessibility modes',
+                  ),
+                ])),
       ],
     );
   }
@@ -263,6 +292,10 @@ class ScheduleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool hasAssignments(DateTime date) {
+    return _scheduleData?.isDateAvailable(date) ?? false;
+  }
+
   void setSelectedDate(DateTime date) {
     _selectedDate = date;
     notifyListeners();
@@ -277,36 +310,41 @@ class ScheduleProvider extends ChangeNotifier {
     // Set the start date to March 18th of the current year
     DateTime startDate = DateTime(currentYear, 3, 18);
 
-    const List<String> firstWeekMonday = [
-      'Kieran',
-      'Leah',
-      'Stratton',
-      'Frans'
+    List<Person> firstWeekMonday = [
+      Person(name: 'Kieran', picture: 'assets/kieran.png'),
+      Person(name: 'Leah', picture: 'assets/leah.png'),
+      Person(name: 'Stratton', picture: 'assets/stratton.png'),
+      Person(name: 'Frans', picture: 'assets/frans.png')
     ];
-    const List<String> firstWeekTuesday = ['Jeffry', 'Leah', 'Cam', 'Michelle'];
-    const List<String> firstWeekFriday = [
-      'Adam M',
-      'Leah',
-      'Stratton',
-      'Frans'
+    List<Person> firstWeekTuesday = [
+      Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
+      Person(name: 'Leah', picture: 'assets/leah.png'),
+      Person(name: 'Cam', picture: 'assets/cam.png'),
+      Person(name: 'Michelle', picture: 'assets/michelle.png')
     ];
-    const List<String> secondWeekMonday = [
-      'Kieran',
-      'Leah',
-      'Stratton',
-      'Frans'
+    List<Person> firstWeekFriday = [
+      Person(name: 'Adam M', picture: 'assets/adam_m.png'),
+      Person(name: 'Leah', picture: 'assets/leah.png'),
+      Person(name: 'Stratton', picture: 'assets/stratton.png'),
+      Person(name: 'Frans', picture: 'assets/frans.png')
     ];
-    const List<String> secondWeekTuesday = [
-      'Jeffry',
-      'Leah',
-      'Cam',
-      'Michelle'
+    List<Person> secondWeekMonday = [
+      Person(name: 'Kieran', picture: 'assets/kieran.png'),
+      Person(name: 'Leah', picture: 'assets/leah.png'),
+      Person(name: 'Stratton', picture: 'assets/stratton.png'),
+      Person(name: 'Frans', picture: 'assets/frans.png')
     ];
-    const List<String> secondWeekFriday = [
-      'Adam M',
-      'Leah',
-      'Cam',
-      'Jeffry',
+    List<Person> secondWeekTuesday = [
+      Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
+      Person(name: 'Leah', picture: 'assets/leah.png'),
+      Person(name: 'Cam', picture: 'assets/cam.png'),
+      Person(name: 'Michelle', picture: 'assets/michelle.png')
+    ];
+    List<Person> secondWeekFriday = [
+      Person(name: 'Adam M', picture: 'assets/adam_m.png'),
+      Person(name: 'Leah', picture: 'assets/leah.png'),
+      Person(name: 'Cam', picture: 'assets/cam.png'),
+      Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
     ];
 
     for (int week = 0; week < 104; week++) {
@@ -320,28 +358,28 @@ class ScheduleProvider extends ChangeNotifier {
           {
             'date': DateFormat('yyyy-MM-dd').format(monday),
             'bays': {
-              '11': firstWeekMonday[0],
-              '12': firstWeekMonday[1],
-              '13': firstWeekMonday[2],
-              '14': firstWeekMonday[3]
+              '11': firstWeekMonday[0].toJson(),
+              '12': firstWeekMonday[1].toJson(),
+              '13': firstWeekMonday[2].toJson(),
+              '14': firstWeekMonday[3].toJson()
             }
           },
           {
             'date': DateFormat('yyyy-MM-dd').format(tuesday),
             'bays': {
-              '11': firstWeekTuesday[0],
-              '12': firstWeekTuesday[1],
-              '13': firstWeekTuesday[2],
-              '14': firstWeekTuesday[3]
+              '11': firstWeekTuesday[0].toJson(),
+              '12': firstWeekTuesday[1].toJson(),
+              '13': firstWeekTuesday[2].toJson(),
+              '14': firstWeekTuesday[3].toJson()
             }
           },
           {
             'date': DateFormat('yyyy-MM-dd').format(friday),
             'bays': {
-              '11': firstWeekFriday[0],
-              '12': firstWeekFriday[1],
-              '13': firstWeekFriday[2],
-              '14': firstWeekFriday[3],
+              '11': firstWeekFriday[0].toJson(),
+              '12': firstWeekFriday[1].toJson(),
+              '13': firstWeekFriday[2].toJson(),
+              '14': firstWeekFriday[3].toJson(),
             }
           },
         ]);
@@ -350,28 +388,28 @@ class ScheduleProvider extends ChangeNotifier {
           {
             'date': DateFormat('yyyy-MM-dd').format(monday),
             'bays': {
-              '11': secondWeekMonday[0],
-              '12': secondWeekMonday[1],
-              '13': secondWeekMonday[2],
-              '14': secondWeekMonday[3]
+              '11': secondWeekMonday[0].toJson(),
+              '12': secondWeekMonday[1].toJson(),
+              '13': secondWeekMonday[2].toJson(),
+              '14': secondWeekMonday[3].toJson()
             }
           },
           {
             'date': DateFormat('yyyy-MM-dd').format(tuesday),
             'bays': {
-              '11': secondWeekTuesday[0],
-              '12': secondWeekTuesday[1],
-              '13': secondWeekTuesday[2],
-              '14': secondWeekTuesday[3],
+              '11': secondWeekTuesday[0].toJson(),
+              '12': secondWeekTuesday[1].toJson(),
+              '13': secondWeekTuesday[2].toJson(),
+              '14': secondWeekTuesday[3].toJson(),
             }
           },
           {
             'date': DateFormat('yyyy-MM-dd').format(friday),
             'bays': {
-              '11': secondWeekFriday[0],
-              '12': secondWeekFriday[1],
-              '13': secondWeekFriday[2],
-              '14': secondWeekFriday[3],
+              '11': secondWeekFriday[0].toJson(),
+              '12': secondWeekFriday[1].toJson(),
+              '13': secondWeekFriday[2].toJson(),
+              '14': secondWeekFriday[3].toJson(),
             }
           },
         ]);
@@ -381,8 +419,25 @@ class ScheduleProvider extends ChangeNotifier {
     _scheduleData = ScheduleData(allocations: allocations);
     notifyListeners();
   }
+}
 
-  bool hasAssignments(DateTime date) {
-    return _scheduleData?.isDateAvailable(date) ?? false;
+class Person {
+  final String name;
+  final String picture;
+
+  Person({required this.name, required this.picture});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'picture': picture,
+    };
+  }
+
+  factory Person.fromJson(Map<String, dynamic> json) {
+    return Person(
+      name: json['name'],
+      picture: json['picture'],
+    );
   }
 }

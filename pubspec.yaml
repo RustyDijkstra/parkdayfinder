@@ -22,3 +22,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/schedule.json
+    - assets/cam.png
+    - assets/leah.png
+    - assets/jeffry.png
+    - assets/kieran.png
+    - assets/stratton.png
+    - assets/frans.png
+    - assets/adam_m.png
+    - assets/michelle.png
