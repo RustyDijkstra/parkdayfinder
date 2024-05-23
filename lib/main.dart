@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Select Day:',
+              'Select Date:',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -212,11 +212,13 @@ class BayAssignmentWidget extends StatelessWidget {
         ? provider.scheduleData?.getBayAssignments(provider.selectedDate!)
         : {};
 
+    final dayOfWeek = DateFormat('EEEE').format(provider.selectedDate!);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Allocation for ${DateFormat('yyyy-MM-dd').format(provider.selectedDate!)}',
+          'Allocation for ${DateFormat('EEEE, yyyy-MM-dd').format(provider.selectedDate!)}',
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
