@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -72,13 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 return DaySelectionWidget(provider: provider);
               },
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/bay-assignments');
-              },
-              child: const Text('View Bay Assignments'),
-            ),
           ],
         ),
       ),
@@ -87,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 Future<ScheduleData> loadScheduleDataFromSource() async {
-  // Load the JSON data from a file`
+  // Load the JSON data from a file
   final jsonData = await rootBundle.loadString('assets/schedule.json');
 
   // Convert the JSON data to a ScheduleData object
@@ -97,22 +91,40 @@ Future<ScheduleData> loadScheduleDataFromSource() async {
 }
 
 class ScheduleData {
-  final Map<String, Map<int, String>> schedule;
+  final List<Map<String, dynamic>> allocations;
 
-  ScheduleData({required this.schedule});
+  ScheduleData({required this.allocations});
 
   factory ScheduleData.fromJson(Map<String, dynamic> json) {
-    final schedule = <String, Map<int, String>>{};
+    return ScheduleData(
+      allocations: List<Map<String, dynamic>>.from(json['allocations']),
+    );
+  }
 
-    json.forEach((day, assignments) {
-      schedule[day] = Map<int, String>.from(
-        (assignments as Map).map(
-          (key, value) => MapEntry(int.parse(key), value.toString()),
-        ),
-      );
-    });
+  bool isDateAvailable(DateTime date) {
+    final dateString = DateFormat('yyyy-MM-dd').format(date);
+    return allocations.any((allocation) => allocation['date'] == dateString);
+  }
 
-    return ScheduleData(schedule: schedule);
+  Map<int, String>? getBayAssignments(DateTime date) {
+    final dateString = DateFormat('yyyy-MM-dd').format(date);
+    final allocation = allocations.firstWhere(
+      (allocation) => allocation['date'] == dateString,
+      orElse: () => {},
+    );
+    if (allocation.isNotEmpty) {
+      return (allocation['bays'] as Map<String, dynamic>)
+          .map((key, value) => MapEntry(int.parse(key), value.toString()));
+    }
+    return null;
+  }
+
+  DateTime getEarliestAvailableDate() {
+    if (allocations.isEmpty) return DateTime.now();
+    final dateStrings =
+        allocations.map((allocation) => allocation['date']).toList();
+    dateStrings.sort();
+    return DateFormat('yyyy-MM-dd').parse(dateStrings.first);
   }
 }
 
@@ -123,22 +135,27 @@ class DaySelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> availableDays =
-        provider.scheduleData?.schedule.keys.toList() ?? [];
-
-    return DropdownButton<String>(
-      value: provider.selectedDay,
-      onChanged: (day) {
-        if (day != null) {
-          provider.setSelectedDay(day);
+    return ElevatedButton(
+      onPressed: () async {
+        final initialDate =
+            provider.scheduleData?.getEarliestAvailableDate() ?? DateTime.now();
+        final selectedDate = await showDatePicker(
+          context: context,
+          initialDate: initialDate,
+          firstDate: DateTime(2024, 1, 1),
+          lastDate: DateTime(2024, 12, 31),
+          selectableDayPredicate: (date) {
+            return provider.scheduleData?.isDateAvailable(date) ?? false;
+          },
+        );
+        if (selectedDate != null) {
+          provider.setSelectedDate(selectedDate);
+          Navigator.pushNamed(context, '/bay-assignments');
         }
       },
-      items: availableDays.map((day) {
-        return DropdownMenuItem<String>(
-          value: day,
-          child: Text(day),
-        );
-      }).toList(),
+      child: Text(provider.selectedDate != null
+          ? DateFormat('yyyy-MM-dd').format(provider.selectedDate!)
+          : 'Pick a date'),
     );
   }
 }
@@ -150,8 +167,16 @@ class BayAssignmentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assignments =
-        provider.scheduleData?.schedule[provider.selectedDay] ?? {};
+    final assignments = provider.selectedDate != null
+        ? provider.scheduleData?.getBayAssignments(provider.selectedDate!)
+        : {};
+
+    if (assignments == null || assignments.isEmpty) {
+      return const Center(
+        child: Text(
+            'No assignments available for the selected date. Park where ever you like!'),
+      );
+    }
 
     return GridView.count(
       crossAxisCount: 2,
@@ -183,9 +208,15 @@ class BayAssignmentScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Selector<ScheduleProvider, ScheduleData?>(
-          selector: (_, provider) => provider.scheduleData,
-          builder: (context, scheduleData, child) {
+        child: Selector<ScheduleProvider, DateTime?>(
+          selector: (_, provider) => provider.selectedDate,
+          builder: (context, selectedDate, child) {
+            if (selectedDate == null) {
+              return const Center(
+                child: Text('No date selected'),
+              );
+            }
+
             return BayAssignmentWidget(
               provider: provider,
             );
@@ -198,18 +229,18 @@ class BayAssignmentScreen extends StatelessWidget {
 
 class ScheduleProvider extends ChangeNotifier {
   ScheduleData? _scheduleData;
-  String _selectedDay = 'Monday';
+  DateTime? _selectedDate;
 
   ScheduleData? get scheduleData => _scheduleData;
-  String get selectedDay => _selectedDay;
+  DateTime? get selectedDate => _selectedDate;
 
   void loadScheduleData(ScheduleData scheduleData) {
     _scheduleData = scheduleData;
     notifyListeners();
   }
 
-  void setSelectedDay(String day) {
-    _selectedDay = day;
+  void setSelectedDate(DateTime date) {
+    _selectedDate = date;
     notifyListeners();
   }
 }
