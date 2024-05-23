@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -19,9 +18,6 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'mobility bay alloc',
         home: const HomeScreen(),
-        routes: {
-          '/bay-assignments': (context) => const BayAssignmentScreen(),
-        },
       ),
     );
   }
@@ -51,9 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // Set the selected date to the closest available date
       provider.setSelectedDate(DateTime.now());
-
-      // Navigate to the bay assignment screen
-      Navigator.pushNamed(context, '/bay-assignments');
     } catch (e) {
       print('Error loading schedule data: $e');
     }
@@ -87,6 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
             Consumer<ScheduleProvider>(
               builder: (context, provider, child) {
                 return DaySelectionWidget(provider: provider);
+              },
+            ),
+            const SizedBox(height: 16),
+            Consumer<ScheduleProvider>(
+              builder: (context, provider, child) {
+                return provider.selectedDate != null
+                    ? BayAssignmentWidget(provider: provider)
+                    : const Center(child: Text('No date selected'));
               },
             ),
           ],
@@ -171,7 +172,6 @@ class DaySelectionWidget extends StatelessWidget {
 
         if (selectedDate != null) {
           provider.setSelectedDate(selectedDate);
-          Navigator.pushNamed(context, '/bay-assignments');
         }
       },
       child: Text(provider.selectedDate != null
@@ -245,38 +245,6 @@ class BayAssignmentWidget extends StatelessWidget {
             }).toList(),
           ),
       ],
-    );
-  }
-}
-
-class BayAssignmentScreen extends StatelessWidget {
-  const BayAssignmentScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final provider = context.read<ScheduleProvider>();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('mobility bay alloc'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Selector<ScheduleProvider, DateTime?>(
-          selector: (_, provider) => provider.selectedDate,
-          builder: (context, selectedDate, child) {
-            if (selectedDate == null) {
-              return const Center(
-                child: Text('No date selected'),
-              );
-            }
-
-            return BayAssignmentWidget(
-              provider: provider,
-            );
-          },
-        ),
-      ),
     );
   }
 }
