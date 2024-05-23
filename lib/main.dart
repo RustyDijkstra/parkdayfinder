@@ -37,16 +37,25 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    loadScheduleData();
+    initializeSchedule();
   }
 
-  Future<void> loadScheduleData() async {
-    // Load the schedule data from a JSON file or API
-    final scheduleData = await loadScheduleDataFromSource();
-    print('Loaded schedule data: $scheduleData'); // Add this line
+  Future<void> initializeSchedule() async {
+    final provider = context.read<ScheduleProvider>();
+    provider.generateSchedule();
 
-    // Update the provider with the loaded data
-    context.read<ScheduleProvider>().loadScheduleData(scheduleData);
+    try {
+      final scheduleData = await loadScheduleDataFromSource();
+      provider.loadScheduleData(scheduleData);
+    } catch (e) {
+      print('Error loading schedule data: $e');
+    }
+  }
+
+  Future<ScheduleData> loadScheduleDataFromSource() async {
+    final jsonData = await rootBundle.loadString('assets/schedule.json');
+    final scheduleData = ScheduleData.fromJson(jsonDecode(jsonData));
+    return scheduleData;
   }
 
   @override
@@ -78,16 +87,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
-
-Future<ScheduleData> loadScheduleDataFromSource() async {
-  // Load the JSON data from a file
-  final jsonData = await rootBundle.loadString('assets/schedule.json');
-
-  // Convert the JSON data to a ScheduleData object
-  final scheduleData = ScheduleData.fromJson(jsonDecode(jsonData));
-
-  return scheduleData;
 }
 
 class ScheduleData {
@@ -126,6 +125,19 @@ class ScheduleData {
     dateStrings.sort();
     return DateFormat('yyyy-MM-dd').parse(dateStrings.first);
   }
+
+  void overwriteAllocations(List<Map<String, dynamic>> newAllocations) {
+    for (var newAllocation in newAllocations) {
+      final date = newAllocation['date'];
+      final index =
+          allocations.indexWhere((allocation) => allocation['date'] == date);
+      if (index != -1) {
+        allocations[index] = newAllocation;
+      } else {
+        allocations.add(newAllocation);
+      }
+    }
+  }
 }
 
 class DaySelectionWidget extends StatelessWidget {
@@ -143,7 +155,7 @@ class DaySelectionWidget extends StatelessWidget {
           context: context,
           initialDate: initialDate,
           firstDate: DateTime(2024, 1, 1),
-          lastDate: DateTime(2024, 12, 31),
+          lastDate: DateTime(2025, 12, 31), // Adjusted to allow 2025 dates
           selectableDayPredicate: (date) {
             return provider.scheduleData?.isDateAvailable(date) ?? false;
           },
@@ -179,7 +191,7 @@ class BayAssignmentWidget extends StatelessWidget {
     }
 
     return GridView.count(
-      crossAxisCount: 2,
+      crossAxisCount: 4,
       children: assignments.entries.map((entry) {
         return Card(
           child: Column(
@@ -235,12 +247,117 @@ class ScheduleProvider extends ChangeNotifier {
   DateTime? get selectedDate => _selectedDate;
 
   void loadScheduleData(ScheduleData scheduleData) {
-    _scheduleData = scheduleData;
+    _scheduleData?.overwriteAllocations(scheduleData.allocations);
     notifyListeners();
   }
 
   void setSelectedDate(DateTime date) {
     _selectedDate = date;
+    notifyListeners();
+  }
+
+  void generateSchedule() {
+    final List<Map<String, dynamic>> allocations = [];
+
+    DateTime startDate = DateTime(2024, 3, 18);
+    const List<String> firstWeekMonday = [
+      'Leah',
+      'Frans',
+      'Stratton',
+      'Kieran'
+    ];
+    const List<String> firstWeekTuesday = ['Leah', 'Michelle', 'Cam', 'Jeffry'];
+    const List<String> firstWeekFriday = [
+      'Leah',
+      'Frans',
+      'Stratton',
+      'Adam M'
+    ];
+    const List<String> secondWeekMonday = [
+      'Leah',
+      'Frans',
+      'Stratton',
+      'Kieran'
+    ];
+    const List<String> secondWeekTuesday = [
+      'Leah',
+      'Michelle',
+      'Cam',
+      'Jeffry'
+    ];
+    const List<String> secondWeekFriday = ['Leah', 'Jeffry', 'Cam', 'Adam M'];
+
+    for (int week = 0; week < 104; week++) {
+      // Adjusted to cover 2 years (52 weeks/year * 2)
+      bool isFirstWeek = week % 2 == 0;
+      DateTime monday = startDate.add(Duration(days: week * 7));
+      DateTime tuesday = monday.add(const Duration(days: 1));
+      DateTime friday = monday.add(const Duration(days: 4));
+
+      if (isFirstWeek) {
+        allocations.addAll([
+          {
+            'date': DateFormat('yyyy-MM-dd').format(monday),
+            'bays': {
+              '12': firstWeekMonday[0],
+              '14': firstWeekMonday[1],
+              '13': firstWeekMonday[2],
+              '11': firstWeekMonday[3]
+            }
+          },
+          {
+            'date': DateFormat('yyyy-MM-dd').format(tuesday),
+            'bays': {
+              '12': firstWeekTuesday[0],
+              '14': firstWeekTuesday[1],
+              '13': firstWeekTuesday[2],
+              '11': firstWeekTuesday[3]
+            }
+          },
+          {
+            'date': DateFormat('yyyy-MM-dd').format(friday),
+            'bays': {
+              '12': firstWeekFriday[0],
+              '14': firstWeekFriday[1],
+              '13': firstWeekFriday[2],
+              '11': firstWeekFriday[3]
+            }
+          },
+        ]);
+      } else {
+        allocations.addAll([
+          {
+            'date': DateFormat('yyyy-MM-dd').format(monday),
+            'bays': {
+              '12': secondWeekMonday[0],
+              '14': secondWeekMonday[1],
+              '13': secondWeekMonday[2],
+              '11': secondWeekMonday[3]
+            }
+          },
+          {
+            'date': DateFormat('yyyy-MM-dd').format(tuesday),
+            'bays': {
+              '12': secondWeekTuesday[0],
+              '14': secondWeekTuesday[1],
+              '13': secondWeekTuesday[2],
+              '11': secondWeekTuesday[3]
+            }
+          },
+          {
+            'date': DateFormat('yyyy-MM-dd').format(friday),
+            'bays': {
+              '12': secondWeekFriday[0],
+              '14': secondWeekFriday[1],
+              '13': secondWeekFriday[2],
+              '11': secondWeekFriday[3]
+            }
+          },
+        ]);
+      }
+    }
+
+    _scheduleData = ScheduleData(allocations: allocations);
     notifyListeners();
   }
 }
