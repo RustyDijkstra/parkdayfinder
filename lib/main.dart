@@ -308,31 +308,36 @@ class ScheduleProvider extends ChangeNotifier {
     DateTime startDate = DateTime(currentYear, 3, 18);
 
     const List<String> firstWeekMonday = [
+      'Kieran',
       'Leah',
-      'Frans',
       'Stratton',
-      'Kieran'
+      'Frans'
     ];
-    const List<String> firstWeekTuesday = ['Leah', 'Michelle', 'Cam', 'Jeffry'];
+    const List<String> firstWeekTuesday = ['Jeffry', 'Leah', 'Cam', 'Michelle'];
     const List<String> firstWeekFriday = [
+      'Adam M',
       'Leah',
-      'Frans',
       'Stratton',
-      'Adam M'
+      'Frans'
     ];
     const List<String> secondWeekMonday = [
+      'Kieran',
       'Leah',
-      'Frans',
       'Stratton',
-      'Kieran'
+      'Frans'
     ];
     const List<String> secondWeekTuesday = [
+      'Jeffry',
       'Leah',
-      'Michelle',
       'Cam',
-      'Jeffry'
+      'Michelle'
     ];
-    const List<String> secondWeekFriday = ['Leah', 'Jeffry', 'Cam', 'Adam M'];
+    const List<String> secondWeekFriday = [
+      'Adam M',
+      'Leah',
+      'Cam',
+      'Jeffry',
+    ];
 
     for (int week = 0; week < 104; week++) {
       bool isFirstWeek = week % 2 == 0;
@@ -345,28 +350,28 @@ class ScheduleProvider extends ChangeNotifier {
           {
             'date': DateFormat('yyyy-MM-dd').format(monday),
             'bays': {
-              '12': firstWeekMonday[0],
-              '14': firstWeekMonday[1],
+              '11': firstWeekMonday[0],
+              '12': firstWeekMonday[1],
               '13': firstWeekMonday[2],
-              '11': firstWeekMonday[3]
+              '14': firstWeekMonday[3]
             }
           },
           {
             'date': DateFormat('yyyy-MM-dd').format(tuesday),
             'bays': {
-              '12': firstWeekTuesday[0],
-              '14': firstWeekTuesday[1],
+              '11': firstWeekTuesday[0],
+              '12': firstWeekTuesday[1],
               '13': firstWeekTuesday[2],
-              '11': firstWeekTuesday[3]
+              '14': firstWeekTuesday[3]
             }
           },
           {
             'date': DateFormat('yyyy-MM-dd').format(friday),
             'bays': {
-              '12': firstWeekFriday[0],
-              '14': firstWeekFriday[1],
+              '11': firstWeekFriday[0],
+              '12': firstWeekFriday[1],
               '13': firstWeekFriday[2],
-              '11': firstWeekFriday[3]
+              '14': firstWeekFriday[3],
             }
           },
         ]);
@@ -375,28 +380,28 @@ class ScheduleProvider extends ChangeNotifier {
           {
             'date': DateFormat('yyyy-MM-dd').format(monday),
             'bays': {
-              '12': secondWeekMonday[0],
-              '14': secondWeekMonday[1],
+              '11': secondWeekMonday[0],
+              '12': secondWeekMonday[1],
               '13': secondWeekMonday[2],
-              '11': secondWeekMonday[3]
+              '14': secondWeekMonday[3]
             }
           },
           {
             'date': DateFormat('yyyy-MM-dd').format(tuesday),
             'bays': {
-              '12': secondWeekTuesday[0],
-              '14': secondWeekTuesday[1],
+              '11': secondWeekTuesday[0],
+              '12': secondWeekTuesday[1],
               '13': secondWeekTuesday[2],
-              '11': secondWeekTuesday[3]
+              '14': secondWeekTuesday[3],
             }
           },
           {
             'date': DateFormat('yyyy-MM-dd').format(friday),
             'bays': {
-              '12': secondWeekFriday[0],
-              '14': secondWeekFriday[1],
+              '11': secondWeekFriday[0],
+              '12': secondWeekFriday[1],
               '13': secondWeekFriday[2],
-              '11': secondWeekFriday[3]
+              '14': secondWeekFriday[3],
             }
           },
         ]);
