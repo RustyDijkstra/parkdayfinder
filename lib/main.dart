@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => ScheduleProvider(),
       child: MaterialApp(
-        title: 'Bay Assignment App',
+        title: 'mobility bay alloc',
         home: const HomeScreen(),
         routes: {
           '/bay-assignments': (context) => const BayAssignmentScreen(),
@@ -47,6 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final scheduleData = await loadScheduleDataFromSource();
       provider.loadScheduleData(scheduleData);
+
+      // Set the selected date to the closest available date
+      provider.setSelectedDate(DateTime.now());
+
+      // Navigate to the bay assignment screen
+      Navigator.pushNamed(context, '/bay-assignments');
     } catch (e) {
       print('Error loading schedule data: $e');
     }
@@ -62,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bay Assignment App'),
+        title: const Text('mobility bay alloc'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -118,14 +125,6 @@ class ScheduleData {
     return null;
   }
 
-  DateTime getEarliestAvailableDate() {
-    if (allocations.isEmpty) return DateTime.now();
-    final dateStrings =
-        allocations.map((allocation) => allocation['date']).toList();
-    dateStrings.sort();
-    return DateFormat('yyyy-MM-dd').parse(dateStrings.first);
-  }
-
   void overwriteAllocations(List<Map<String, dynamic>> newAllocations) {
     for (var newAllocation in newAllocations) {
       final date = newAllocation['date'];
@@ -149,17 +148,27 @@ class DaySelectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        final initialDate =
-            provider.scheduleData?.getEarliestAvailableDate() ?? DateTime.now();
+        DateTime initialDate = DateTime.now();
+
+        // Find the nearest date with assignments
+        if (!provider.hasAssignments(initialDate)) {
+          final closestDateWithAssignment =
+              _findClosestDateWithAssignments(provider, initialDate);
+          if (closestDateWithAssignment != null) {
+            initialDate = closestDateWithAssignment;
+          }
+        }
+
         final selectedDate = await showDatePicker(
           context: context,
           initialDate: initialDate,
           firstDate: DateTime(2024, 1, 1),
-          lastDate: DateTime(2025, 12, 31), // Adjusted to allow 2025 dates
+          lastDate: DateTime(2025, 12, 31),
           selectableDayPredicate: (date) {
-            return provider.scheduleData?.isDateAvailable(date) ?? false;
+            return provider.hasAssignments(date);
           },
         );
+
         if (selectedDate != null) {
           provider.setSelectedDate(selectedDate);
           Navigator.pushNamed(context, '/bay-assignments');
@@ -169,6 +178,26 @@ class DaySelectionWidget extends StatelessWidget {
           ? DateFormat('yyyy-MM-dd').format(provider.selectedDate!)
           : 'Pick a date'),
     );
+  }
+
+  DateTime? _findClosestDateWithAssignments(
+      ScheduleProvider provider, DateTime startDate) {
+    final schedule = provider.scheduleData;
+    if (schedule == null) return null;
+
+    final dates = schedule.allocations.map((allocation) {
+      return DateFormat('yyyy-MM-dd').parse(allocation['date']);
+    }).toList();
+
+    dates.sort((a, b) => a.compareTo(b));
+
+    for (DateTime date in dates) {
+      if (date.isAfter(startDate) || date.isAtSameMomentAs(startDate)) {
+        return date;
+      }
+    }
+
+    return dates.isNotEmpty ? dates.first : null;
   }
 }
 
@@ -183,26 +212,39 @@ class BayAssignmentWidget extends StatelessWidget {
         ? provider.scheduleData?.getBayAssignments(provider.selectedDate!)
         : {};
 
-    if (assignments == null || assignments.isEmpty) {
-      return const Center(
-        child: Text(
-            'No assignments available for the selected date. Park where ever you like!'),
-      );
-    }
-
-    return GridView.count(
-      crossAxisCount: 4,
-      children: assignments.entries.map((entry) {
-        return Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Bay ${entry.key}'),
-              Text('Assigned: ${entry.value}'),
-            ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Allocation for ${DateFormat('yyyy-MM-dd').format(provider.selectedDate!)}',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
-        );
-      }).toList(),
+        ),
+        const SizedBox(height: 16),
+        if (assignments == null || assignments.isEmpty)
+          const Center(
+            child: Text(
+                'No assignments available for the selected date. Park where ever you like!'),
+          )
+        else
+          GridView.count(
+            shrinkWrap: true,
+            crossAxisCount: 4,
+            children: assignments.entries.map((entry) {
+              return Card(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Bay ${entry.key}'),
+                    Text('Assigned: ${entry.value}'),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+      ],
     );
   }
 }
@@ -216,7 +258,7 @@ class BayAssignmentScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bay Assignments'),
+        title: const Text('mobility bay alloc'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -259,7 +301,12 @@ class ScheduleProvider extends ChangeNotifier {
   void generateSchedule() {
     final List<Map<String, dynamic>> allocations = [];
 
-    DateTime startDate = DateTime(2024, 3, 18);
+    // Get the current year
+    final currentYear = DateTime.now().year;
+
+    // Set the start date to March 18th of the current year
+    DateTime startDate = DateTime(currentYear, 3, 18);
+
     const List<String> firstWeekMonday = [
       'Leah',
       'Frans',
@@ -288,7 +335,6 @@ class ScheduleProvider extends ChangeNotifier {
     const List<String> secondWeekFriday = ['Leah', 'Jeffry', 'Cam', 'Adam M'];
 
     for (int week = 0; week < 104; week++) {
-      // Adjusted to cover 2 years (52 weeks/year * 2)
       bool isFirstWeek = week % 2 == 0;
       DateTime monday = startDate.add(Duration(days: week * 7));
       DateTime tuesday = monday.add(const Duration(days: 1));
@@ -359,5 +405,9 @@ class ScheduleProvider extends ChangeNotifier {
 
     _scheduleData = ScheduleData(allocations: allocations);
     notifyListeners();
+  }
+
+  bool hasAssignments(DateTime date) {
+    return _scheduleData?.isDateAvailable(date) ?? false;
   }
 }
