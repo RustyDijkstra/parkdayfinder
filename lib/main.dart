@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -239,6 +239,9 @@ class BayAssignmentWidget extends StatelessWidget {
           GridView.count(
             shrinkWrap: true,
             crossAxisCount: 4,
+            padding: const EdgeInsets.all(10),
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
             children: assignments.entries.map((entry) {
               final person = entry.value;
               return Card(
@@ -247,12 +250,20 @@ class BayAssignmentWidget extends StatelessWidget {
                   children: [
                     Text('Bay ${entry.key}'),
                     Text('Assigned: ${person.name}'),
-                    CircleAvatar(
-                      // backgroundColor: Colors.blue,
-                      // child: Text('Cam'),
-                      backgroundImage: NetworkImage(person.picture),
-                    )
-                    // Image.asset(person.picture, height: 100, width: 100),
+                    Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              CircleAvatar(
+                                // backgroundColor: Colors.blue,
+                                // child: Text('Cam'),
+                                backgroundImage: NetworkImage(person.picture),
+                                minRadius: 30,
+                                maxRadius: 45,
+                              ),
+                              // Image.asset(person.picture, height: 100, width: 100),
+                            ]))
                   ],
                 ),
               );
