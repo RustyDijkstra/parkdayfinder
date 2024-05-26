@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => ScheduleProvider(),
       child: const MaterialApp(
-        title: 'mobility bay alloc',
+        title: 'mobility parking bay allocator',
         home: HomeScreen(),
       ),
     );
@@ -62,13 +62,45 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'mobility bay alloc',
+          title: RichText(
+        text: const TextSpan(
+          text: 'm',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
+            fontSize: 25,
+            color: Colors.green,
           ),
+          children: <TextSpan>[
+            TextSpan(
+              text: 'obility',
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            ),
+            TextSpan(
+              text: ' p',
+              style: TextStyle(fontSize: 25, color: Colors.green),
+            ),
+            TextSpan(
+              text: 'arking',
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            ),
+            TextSpan(
+              text: ' b',
+              style: TextStyle(fontSize: 25, color: Colors.green),
+            ),
+            TextSpan(
+              text: 'ay',
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            ),
+            TextSpan(
+              text: ' a',
+              style: TextStyle(fontSize: 25, color: Colors.green),
+            ),
+            TextSpan(
+              text: 'llocation',
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            )
+          ],
         ),
-      ),
+      )),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -231,10 +263,23 @@ class BayAssignmentWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         if (assignments == null || assignments.isEmpty)
-          const Center(
-            child: Text(
-                'No assignments available for the selected date. Park where ever you like!'),
-          )
+          const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                        'No assignments available for the selected date. Park where ever you like!',
+                        style: TextStyle(
+                          fontSize: 16,
+                        )),
+                    Icon(
+                      Icons.free_cancellation_sharp,
+                      color: Colors.green,
+                      size: 24.0,
+                      semanticLabel: 'Text to announce in accessibility modes',
+                    ),
+                  ]))
         else
           GridView.count(
             shrinkWrap: true,
