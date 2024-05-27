@@ -13,6 +13,7 @@ dependencies:
   english_words: any
   provider: ^6.0.0
   intl: ^0.17.0
+  lottie: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -30,3 +31,4 @@ flutter:
     - assets/frans.png
     - assets/adam_m.png
     - assets/michelle.png
+    - assets/underconstruction.json
