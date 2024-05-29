@@ -21,7 +21,7 @@ enum ColorSeed {
   indigo('Indigo', Colors.indigo),
   blue('Blue', Colors.blue),
   teal('Teal', Colors.teal),
-  green('Green', Colors.green),
+  green('Green', Color(0xff5eb706)),
   yellow('Yellow', Colors.yellow),
   orange('Orange', Colors.orange),
   deepOrange('Deep Orange', Colors.deepOrange),

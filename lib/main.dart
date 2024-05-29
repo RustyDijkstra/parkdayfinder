@@ -19,7 +19,7 @@ class _AppState extends State<App> {
   bool useMaterial3 = true;
   ThemeMode themeMode = ThemeMode.system;
   // ThemeMode themeMode = ThemeMode.light;
-  ColorSeed colorSelected = ColorSeed.baseColor;
+  ColorSeed colorSelected = ColorSeed.green;
   ColorImageProvider imageSelected = ColorImageProvider.leaves;
   ColorScheme? imageColorScheme = const ColorScheme.light();
   ColorSelectionMethod colorSelectionMethod = ColorSelectionMethod.colorSeed;

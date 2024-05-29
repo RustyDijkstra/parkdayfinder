@@ -1,13 +1,8 @@
-// Copyright 2021 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
 
 import 'component_screen.dart';
 import 'constants.dart';
 import 'parking_bay_allocation.dart';
-import 'typography_screen.dart';
 import 'under_construction.dart';
 
 import 'dart:convert';

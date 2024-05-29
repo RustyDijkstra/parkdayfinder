@@ -16,7 +16,7 @@ class ElevationScreen extends StatelessWidget {
             delegate: SliverChildListDelegate(<Widget>[
               const SizedBox(height: 10),
               Padding(
-                  padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -36,7 +36,7 @@ class ElevationScreen extends StatelessWidget {
             delegate: SliverChildListDelegate(<Widget>[
               const SizedBox(height: 10),
               Padding(
-                  padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -175,22 +175,83 @@ class _ElevationCardState extends State<ElevationCard> {
                 style: Theme.of(context).textTheme.labelMedium,
               ),
               Text(
-                'Allocated to: ${widget.info.allocatedTo}',
+                widget.info.allocatedTo.isEmpty != true
+                    ? 'Allocated to: ${widget.info.allocatedTo}'
+                    : "Unallocated",
                 style: Theme.of(context).textTheme.labelMedium,
               ),
-              if (widget.surfaceTint != null)
+              if (widget.info.allocatedTo.isEmpty != true)
                 Expanded(
                   child: Align(
                     alignment: Alignment.center,
                     child: CircleAvatar(
-                      // backgroundColor: Colors.blue,
-                      // child: Text('Cam'),
-                      backgroundImage: NetworkImage(widget.info.pictureUrl),
+                      // backgroundImage: NetworkImage(widget.info.pictureUrl),
                       minRadius: 30,
                       maxRadius: 45,
+                      child: Text(widget.info.allocatedTo
+                          .substring(0, 2)
+                          .toUpperCase()),
                     ),
                   ),
-                ),
+                )
+              else
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: FilledButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Notice'),
+                              content: Text(
+                                  'Please login to reserve Bay ${widget.info.bay}'),
+                              actions: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              content: const Text(
+                                                  'Sign up/in has not been implemented yet. Buy Stratton a coffee and he'
+                                                  'll get it up.'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('Ok'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: const Text('Sign In'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: const Text('Claim it now!'),
+                    ),
+                  ),
+                )
             ],
           ),
         ),
@@ -211,10 +272,10 @@ class ElevationInfo {
 }
 
 const List<ElevationInfo> elevations = <ElevationInfo>[
-  ElevationInfo(1, 1.0, 0, 11, "No one", "NA"),
-  ElevationInfo(1, 1.0, 5, 12, "No one", "NA"),
-  ElevationInfo(2, 1.0, 8, 13, "No one", "NA"),
-  ElevationInfo(3, 1.0, 11, 14, "No one", "NA")
+  ElevationInfo(1, 1.0, 0, 11, "", "NA"),
+  ElevationInfo(1, 1.0, 5, 12, "", "NA"),
+  ElevationInfo(1, 1.0, 8, 13, "", "NA"),
+  ElevationInfo(1, 1.0, 11, 14, "", "NA")
 ];
 
 // OTHERS
@@ -288,7 +349,8 @@ class DaySelectionWidget extends StatelessWidget {
           firstDate: DateTime(2024, 1, 1),
           lastDate: DateTime(2025, 12, 31),
           selectableDayPredicate: (date) {
-            return provider.hasAssignments(date);
+            // return provider.hasAssignments(date); // will hide other dates that has no allocation
+            return true;
           },
         );
 
@@ -330,7 +392,9 @@ class SelectedDateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Allocation for ${DateFormat('EEEE, yyyy-MM-dd').format(provider.selectedDate!)}',
+      provider.scheduleData != null
+          ? 'Allocation for ${DateFormat('EEEE, yyyy-MM-dd').format(provider.selectedDate!)}'
+          : "No date selected",
       style: Theme.of(context).textTheme.bodyMedium,
     );
   }
