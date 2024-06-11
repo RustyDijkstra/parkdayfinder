@@ -69,7 +69,7 @@ class _AppState extends State<App> {
       create: (_) => ScheduleProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'mobility parking bay allocation',
+        title: 'park bay finder',
         themeMode: themeMode,
         theme: ThemeData(
           colorSchemeSeed:

@@ -141,22 +141,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return AppBar(
       title: RichText(
         text: const TextSpan(
-          text: 'm',
+          text: 'p',
           style: TextStyle(
             fontSize: 25,
             color: Colors.green,
           ),
           children: <TextSpan>[
             TextSpan(
-              text: 'obility',
-              style: TextStyle(fontSize: 20, color: Colors.grey),
-            ),
-            TextSpan(
-              text: ' p',
-              style: TextStyle(fontSize: 25, color: Colors.green),
-            ),
-            TextSpan(
-              text: 'arking',
+              text: 'ark',
               style: TextStyle(fontSize: 20, color: Colors.grey),
             ),
             TextSpan(
@@ -168,11 +160,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               style: TextStyle(fontSize: 20, color: Colors.grey),
             ),
             TextSpan(
-              text: ' a',
+              text: ' f',
               style: TextStyle(fontSize: 25, color: Colors.green),
             ),
             TextSpan(
-              text: 'llocation',
+              text: 'inder',
               style: TextStyle(fontSize: 20, color: Colors.grey),
             )
           ],
