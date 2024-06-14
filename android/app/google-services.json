@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490409550066",
+    "project_id": "park-day-finder",
+    "storage_bucket": "park-day-finder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490409550066:android:fa0a95564ab6ada565f06b",
+        "android_client_info": {
+          "package_name": "com.gigabyting.parkdayfinder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8pVLGipmVnukt1KDN0fSxnr0OmPZZqLU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

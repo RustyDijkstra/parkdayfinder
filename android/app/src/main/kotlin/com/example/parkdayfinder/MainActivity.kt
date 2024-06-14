@@ -1,4 +1,4 @@
-package com.example.parkdayfinder
+package com.gigabyting.parkdayfinder
 
 import io.flutter.embedding.android.FlutterActivity
 
