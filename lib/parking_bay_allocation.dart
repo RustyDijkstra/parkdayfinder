@@ -231,7 +231,7 @@ class _ElevationCardState extends State<ElevationCard> {
                                                 children: [
                                                   const Text(
                                                       'Sign up/in has not been implemented yet. Buy Stratton a coffee and he\'ll get it up.'),
-                                                  SizedBox(height: 20),
+                                                  const SizedBox(height: 20),
                                                   Lottie.asset(
                                                     'assets/underconstruction.json',
                                                     width: 300,
@@ -551,7 +551,9 @@ class ScheduleProvider extends ChangeNotifier {
     }
 
     _scheduleData = ScheduleData(allocations: allocations);
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 }
 
