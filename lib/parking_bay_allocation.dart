@@ -332,16 +332,17 @@ class DaySelectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        DateTime initialDate = DateTime.now();
+        DateTime initialDate = provider
+            ._selectedDate!; // hold on to the last selected date rather than getting the next available allocation
 
-        // Find the nearest date with assignments
-        if (!provider.hasAssignments(initialDate)) {
-          final closestDateWithAssignment =
-              _findClosestDateWithAssignments(provider, initialDate);
-          if (closestDateWithAssignment != null) {
-            initialDate = closestDateWithAssignment;
-          }
-        }
+        // // Find the nearest date with assignments
+        // if (!provider.hasAssignments(initialDate)) {
+        //   final closestDateWithAssignment =
+        //       _findClosestDateWithAssignments(provider, initialDate);
+        //   if (closestDateWithAssignment != null) {
+        //     initialDate = closestDateWithAssignment;
+        //   }
+        // }
 
         final selectedDate = await showDatePicker(
           context: context,
