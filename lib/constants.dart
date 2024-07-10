@@ -8,6 +8,7 @@ const double mediumWidthBreakpoint = 1000;
 const double largeWidthBreakpoint = 1500;
 
 const double transitionLength = 500;
+const String dateFormat = 'dd-MM-yyyy';
 
 // Whether the user has chosen a theme color via a direct [ColorSeed] selection,
 // or an image [ColorImageProvider].

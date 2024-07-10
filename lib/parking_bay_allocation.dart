@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'constants.dart';
+import 'package:lottie/lottie.dart';
 
 class ElevationScreen extends StatelessWidget {
   const ElevationScreen({super.key});
@@ -224,9 +226,20 @@ class _ElevationCardState extends State<ElevationCard> {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
-                                              content: const Text(
-                                                  'Sign up/in has not been implemented yet. Buy Stratton a coffee and he'
-                                                  'll get it up.'),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Text(
+                                                      'Sign up/in has not been implemented yet. Buy Stratton a coffee and he\'ll get it up.'),
+                                                  SizedBox(height: 20),
+                                                  Lottie.asset(
+                                                    'assets/underconstruction.json',
+                                                    width: 300,
+                                                    height: 300,
+                                                    fit: BoxFit.scaleDown,
+                                                  ),
+                                                ],
+                                              ),
                                               actions: <Widget>[
                                                 TextButton(
                                                   onPressed: () {
@@ -360,7 +373,7 @@ class DaySelectionWidget extends StatelessWidget {
         }
       },
       child: Text(provider.selectedDate != null
-          ? DateFormat('yyyy-MM-dd').format(provider.selectedDate!)
+          ? DateFormat(dateFormat).format(provider.selectedDate!)
           : 'Pick a date'),
     );
   }
@@ -371,7 +384,7 @@ class DaySelectionWidget extends StatelessWidget {
     if (schedule == null) return null;
 
     final dates = schedule.allocations.map((allocation) {
-      return DateFormat('yyyy-MM-dd').parse(allocation['date']);
+      return DateFormat(dateFormat).parse(allocation['date']);
     }).toList();
 
     dates.sort((a, b) => a.compareTo(b));
@@ -393,8 +406,8 @@ class SelectedDateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      provider.scheduleData != null
-          ? 'Allocation for ${DateFormat('EEEE, yyyy-MM-dd').format(provider.selectedDate!)}'
+      provider.selectedDate != null
+          ? 'Allocation for ${DateFormat('EEEE, dd-MM-yyyy').format(provider.selectedDate!)}'
           : "No date selected",
       style: Theme.of(context).textTheme.bodyMedium,
     );
