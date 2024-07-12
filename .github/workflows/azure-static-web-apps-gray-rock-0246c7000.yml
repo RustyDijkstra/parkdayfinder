@@ -1,12 +1,13 @@
 name: Azure Static Web Apps CI/CD
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   types: [opened, synchronize, reopened, closed]
+  #   branches:
+  #     - main
+  workflow_dispatch: # This ensures the workflow is only triggered manually
 
 jobs:
   build_and_deploy_job:
