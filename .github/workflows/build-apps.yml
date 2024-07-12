@@ -59,3 +59,31 @@ jobs:
         with:
           name: mobile-releases
           path: releases/
+
+  deploy_to_public_repo:
+    needs: build
+    # TODO: Put this back once everything is working
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main' No need fo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download mobile artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: mobile-releases
+          path: mobile-releases
+
+      - name: Deploy to public repo
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git clone https://github.com/OldRustyDijkstra/pdf.git
+          cd pdf
+          rm -rf *
+          cp -R ../mobile-releases/* ./  # Updated to use the correct path
+          git add .
+          git commit -m "Release ${{ github.sha }}"
+          git push https://$GH_PAT@github.com/OldRustyDijkstra/pdf.git main
