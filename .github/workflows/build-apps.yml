@@ -1,5 +1,4 @@
 name: Build Mobile Apps
-
 on:
   # push:
   #   branches:
@@ -8,72 +7,59 @@ on:
   #   branches:
   #     - main
   workflow_dispatch: # Allows manual triggering
-
 jobs:
   build:
     runs-on: macos-latest # macOS runner is required for iOS builds
     steps:
-      - uses: actions/checkout@v2
-
+      - uses: actions/checkout@v3
       - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: "zulu"
           java-version: "11"
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.x" # Specify your Flutter version
           channel: "stable" # or 'beta', depending on your needs
-
       - name: Install dependencies
         run: flutter pub get
-
       - name: Build Android APK
         run: flutter build apk --release
-
       - name: Build iOS (no codesigning)
         run: flutter build ios --release --no-codesign
-
       - name: Upload Android Build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: android-release
           path: build/app/outputs/flutter-apk/app-release.apk
-
       - name: Upload iOS Build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ios-release
           path: build/ios/iphoneos/Runner.app
-
       - name: Archive Android and iOS Builds
         run: |
           mkdir -p releases
           cp build/app/outputs/flutter-apk/app-release.apk releases/
           zip -r releases/ios-release.zip build/ios/iphoneos/Runner.app
-
       - name: Upload Archived Builds
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: mobile-releases
           path: releases/
-
   deploy_to_public_repo:
     needs: build
     # TODO: Put this back once everything is working
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main' No need fo
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
+      - uses: actions/checkout@v3
       - name: Download mobile artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: mobile-releases
           path: mobile-releases
-
       - name: Deploy to public repo
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
