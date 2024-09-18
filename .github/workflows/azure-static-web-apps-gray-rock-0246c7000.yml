@@ -1,13 +1,13 @@
 name: Azure Static Web Apps CI/CD
 on:
   # Uncomment these if you want to trigger on push or pull request
-  # push:
-  #   branches:
-  #     - main
-  # pull_request:
-  #   types: [opened, synchronize, reopened, closed]
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
   workflow_dispatch: # This allows manual triggering
 
 jobs:
