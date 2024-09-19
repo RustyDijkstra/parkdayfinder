@@ -457,7 +457,7 @@ class ScheduleProvider extends ChangeNotifier {
       Person(name: 'Michelle', picture: 'assets/michelle.png')
     ];
     List<Person> firstWeekFriday = [
-      Person(name: 'Molly', picture: 'assets/adam_m.png'),
+      Person(name: 'Paton', picture: 'assets/adam_m.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
       Person(name: 'Stratton', picture: 'assets/stratton.png'),
       Person(name: 'Frans', picture: 'assets/frans.png')
@@ -475,7 +475,7 @@ class ScheduleProvider extends ChangeNotifier {
       Person(name: 'Michelle', picture: 'assets/michelle.png')
     ];
     List<Person> secondWeekFriday = [
-      Person(name: 'Paton', picture: 'assets/adam_m.png'),
+      Person(name: 'Molly', picture: 'assets/adam_m.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
       Person(name: 'Cam', picture: 'assets/cam.png'),
       Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
