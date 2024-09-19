@@ -186,13 +186,23 @@ class _ElevationCardState extends State<ElevationCard> {
                 Expanded(
                   child: Align(
                     alignment: Alignment.center,
-                    child: CircleAvatar(
-                      // backgroundImage: NetworkImage(widget.info.pictureUrl),
-                      minRadius: 30,
-                      maxRadius: 45,
-                      child: Text(widget.info.allocatedTo
-                          .substring(0, 2)
-                          .toUpperCase()),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        double screenWidth = MediaQuery.of(context).size.width;
+                        double minRadius = screenWidth * 0.05;
+                        double maxRadius = screenWidth * 0.05;
+
+                        return CircleAvatar(
+                          // backgroundImage: NetworkImage(widget.info.pictureUrl),
+                          minRadius: minRadius,
+                          maxRadius: maxRadius,
+                          child: Text(
+                            widget.info.allocatedTo
+                                .substring(0, 2)
+                                .toUpperCase(),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 )
