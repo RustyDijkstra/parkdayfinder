@@ -327,8 +327,19 @@ class ScheduleData {
       final date = newAllocation['date'];
       final index =
           allocations.indexWhere((allocation) => allocation['date'] == date);
+
       if (index != -1) {
-        allocations[index] = newAllocation;
+        final currentAllocator = allocations[index]['bays'];
+        final newAllocator = newAllocation['bays'];
+
+        currentAllocator.forEach((key, value) {
+          if (newAllocator.containsKey(key)) {
+            if (currentAllocator[key]['name'] != newAllocator[key]['name']) {
+              currentAllocator[key]['name'] =
+                  "${newAllocator[key]['name']} (claimed from ${currentAllocator[key]['name']})";
+            }
+          }
+        });
       } else {
         allocations.add(newAllocation);
       }

@@ -1,12 +1,24 @@
 {
 	"allocations": [
 		{
-			"date": "2024-03-18",
+			"date": "2024-09-20",
 			"bays": {
-				"12": "Leah",
-				"14": "Frans",
-				"13": "Stratton",
-				"11": "Kieran"
+				"12": {
+					"name": "Cam",
+					"picture": "assets/cam.png"
+				},
+				"14": {
+					"name": "Frans",
+					"picture": "assets/frans.png"
+				},
+				"13": {
+					"name": "Stratton",
+					"picture": "assets/stratton.png"
+				},
+				"11": {
+					"name": "Paton",
+					"picture": "assets/frans.png"
+				}
 			}
 		}
 	]
