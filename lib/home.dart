@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-
 import 'component_screen.dart';
 import 'constants.dart';
 import 'parking_bay_allocation.dart';
 import 'under_construction.dart';
-
+import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -48,6 +47,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool showLargeSizeLayout = false;
 
   int screenIndex = 0;
+  String? errorMessage; // Todo: Add this to the main page
 
   @override
   initState() {
@@ -81,9 +81,34 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Future<ScheduleData> loadScheduleDataFromSource() async {
-    final jsonData = await rootBundle.loadString('assets/schedule.json');
-    final scheduleData = ScheduleData.fromJson(jsonDecode(jsonData));
-    return scheduleData;
+    const url =
+        'https://raw.githubusercontent.com/RustyDijkstra/overrideAllocation/main/schedule.json';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final scheduleData = ScheduleData.fromJson(jsonData);
+        return scheduleData;
+      } else {
+        throw Exception('Failed to load schedule data');
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage =
+            'Failed to retrieve override data. Falling back to local data.';
+      });
+
+      try {
+        final jsonData = await rootBundle.loadString('assets/schedule.json');
+        final scheduleData = ScheduleData.fromJson(jsonDecode(jsonData));
+        return scheduleData;
+      } catch (e) {
+        setState(() {
+          errorMessage = 'Error loading local schedule data: $e';
+        });
+        throw Exception('Error loading schedule data');
+      }
+    }
   }
 
   @override
