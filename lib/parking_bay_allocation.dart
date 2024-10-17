@@ -469,37 +469,37 @@ class ScheduleProvider extends ChangeNotifier {
       Person(name: 'Kieran', picture: 'assets/kieran.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
       Person(name: 'Stratton', picture: 'assets/stratton.png'),
-      Person(name: 'Frans', picture: 'assets/frans.png')
+      Person(name: 'Frans', picture: 'assets/frans.png'),
     ];
     List<Person> firstWeekTuesday = [
       Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
       Person(name: 'Cam', picture: 'assets/cam.png'),
-      Person(name: 'Michelle', picture: 'assets/michelle.png')
+      Person(name: 'Michelle', picture: 'assets/michelle.png'),
     ];
     List<Person> firstWeekFriday = [
-      Person(name: 'Paton', picture: 'assets/adam_m.png'),
+      Person(name: 'Frans', picture: 'assets/frans.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
       Person(name: 'Stratton', picture: 'assets/stratton.png'),
-      Person(name: 'Frans', picture: 'assets/frans.png')
+      Person(name: 'Paton', picture: 'assets/adam_m.png'),
     ];
     List<Person> secondWeekMonday = [
       Person(name: 'Kieran', picture: 'assets/kieran.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
       Person(name: 'Stratton', picture: 'assets/stratton.png'),
-      Person(name: 'Frans', picture: 'assets/frans.png')
+      Person(name: 'Frans', picture: 'assets/frans.png'),
     ];
     List<Person> secondWeekTuesday = [
       Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
       Person(name: 'Cam', picture: 'assets/cam.png'),
-      Person(name: 'Michelle', picture: 'assets/michelle.png')
+      Person(name: 'Michelle', picture: 'assets/michelle.png'),
     ];
     List<Person> secondWeekFriday = [
-      Person(name: 'Molly', picture: 'assets/adam_m.png'),
+      Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
       Person(name: 'Cam', picture: 'assets/cam.png'),
-      Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
+      Person(name: 'Molly', picture: 'assets/adam_m.png'),
     ];
 
     for (int week = 0; week < 104; week++) {
