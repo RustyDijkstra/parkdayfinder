@@ -3,7 +3,6 @@
 		"dart-code.flutter",
 		"dart-code.dart-code",
 		"esbenp.prettier-vscode",
-		"ms-vscode.vscode-typescript-tslint-plugin",
 		"eamodio.gitlens"
 	]
 }
