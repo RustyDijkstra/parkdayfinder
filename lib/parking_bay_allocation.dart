@@ -298,7 +298,6 @@ const List<ElevationInfo> elevations = <ElevationInfo>[
   ElevationInfo(1, 1.0, 0, 11, "", "NA"),
   ElevationInfo(1, 1.0, 5, 12, "", "NA"),
   ElevationInfo(1, 1.0, 8, 13, "", "NA"),
-  ElevationInfo(1, 1.0, 11, 14, "", "NA")
 ];
 
 // OTHERS
@@ -460,7 +459,7 @@ class ScheduleProvider extends ChangeNotifier {
     final List<Map<String, dynamic>> allocations = [];
     const currentYear = 2024;
     DateTime startDate = DateTime(currentYear, 3, 18);
-    DateTime endDate = DateTime(currentYear, 11, 25);
+    DateTime endDate = DateTime(currentYear, 12, 09);
 
     List<Person> firstWeekMonday = [
       Person(name: 'Kieran', picture: 'assets/kieran.png'),
@@ -504,35 +503,64 @@ class ScheduleProvider extends ChangeNotifier {
       DateTime tuesday = monday.add(const Duration(days: 1));
       DateTime friday = monday.add(const Duration(days: 4));
 
-      allocations.addAll([
-        {
-          'date': DateFormat('yyyy-MM-dd').format(monday),
-          'bays': {
-            '11': mondayList[0].toJson(),
-            '12': mondayList[1].toJson(),
-            '13': mondayList[2].toJson(),
-            '14': mondayList[3].toJson()
+      if (mondayList.length < 4) {
+        allocations.addAll([
+          {
+            'date': DateFormat('yyyy-MM-dd').format(monday),
+            'bays': {
+              '12': mondayList[0].toJson(),
+              '13': mondayList[1].toJson(),
+              '14': mondayList[2].toJson()
+            }
+          },
+          {
+            'date': DateFormat('yyyy-MM-dd').format(tuesday),
+            'bays': {
+              '12': tuesdayList[0].toJson(),
+              '13': tuesdayList[1].toJson(),
+              '14': tuesdayList[2].toJson()
+            }
+          },
+          {
+            'date': DateFormat('yyyy-MM-dd').format(friday),
+            'bays': {
+              '12': fridayList[0].toJson(),
+              '13': fridayList[1].toJson(),
+              '14': fridayList[2].toJson(),
+            }
           }
-        },
-        {
-          'date': DateFormat('yyyy-MM-dd').format(tuesday),
-          'bays': {
-            '11': tuesdayList[0].toJson(),
-            '12': tuesdayList[1].toJson(),
-            '13': tuesdayList[2].toJson(),
-            '14': tuesdayList[3].toJson()
-          }
-        },
-        {
-          'date': DateFormat('yyyy-MM-dd').format(friday),
-          'bays': {
-            '11': fridayList[0].toJson(),
-            '12': fridayList[1].toJson(),
-            '13': fridayList[2].toJson(),
-            '14': fridayList[3].toJson(),
-          }
-        },
-      ]);
+        ]);
+      } else {
+        allocations.addAll([
+          {
+            'date': DateFormat('yyyy-MM-dd').format(monday),
+            'bays': {
+              '11': mondayList[0].toJson(),
+              '12': mondayList[1].toJson(),
+              '13': mondayList[2].toJson(),
+              '14': mondayList[3].toJson()
+            }
+          },
+          {
+            'date': DateFormat('yyyy-MM-dd').format(tuesday),
+            'bays': {
+              '11': tuesdayList[0].toJson(),
+              '12': tuesdayList[1].toJson(),
+              '13': tuesdayList[2].toJson(),
+              '14': tuesdayList[3].toJson()
+            }
+          },
+          {
+            'date': DateFormat('yyyy-MM-dd').format(friday),
+            'bays': {
+              '11': fridayList[0].toJson(),
+              '12': fridayList[1].toJson(),
+              '13': fridayList[2].toJson(),
+              '14': fridayList[3].toJson(),
+            }
+          },
+        ]);
+      }
     }
 
     for (int week = 0; week < 104; week++) {
@@ -551,40 +579,34 @@ class ScheduleProvider extends ChangeNotifier {
     }
 
     firstWeekMonday = [
-      Person(name: 'Stratton', picture: 'assets/kieran.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Frans', picture: 'assets/stratton.png'),
-      Person(name: 'Kieran', picture: 'assets/frans.png'),
+      Person(name: 'Frans', picture: 'assets/frans.png'),
+      Person(name: 'Stratton', picture: 'assets/stratton.png'),
     ];
     firstWeekTuesday = [
-      Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Adam', picture: 'assets/cam.png'),
+      Person(name: 'Kieran', picture: 'assets/kieran.png'),
       Person(name: 'Michelle', picture: 'assets/michelle.png'),
     ];
     firstWeekFriday = [
-      Person(name: 'Stratton', picture: 'assets/frans.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Molly', picture: 'assets/stratton.png'),
-      Person(name: 'Paton', picture: 'assets/adam_m.png'),
+      Person(name: 'Jeffry', picture: 'assets/Jeffry.png'),
+      Person(name: 'Paton', picture: 'assets/paton.png'),
     ];
     secondWeekMonday = [
-      Person(name: 'Stratton', picture: 'assets/kieran.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Frans', picture: 'assets/stratton.png'),
-      Person(name: 'Kieran', picture: 'assets/frans.png'),
+      Person(name: 'Frans', picture: 'assets/frans.png'),
+      Person(name: 'Stratton', picture: 'assets/stratton.png'),
     ];
     secondWeekTuesday = [
-      Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Adam', picture: 'assets/cam.png'),
+      Person(name: 'Kieran', picture: 'assets/kieran.png'),
       Person(name: 'Michelle', picture: 'assets/michelle.png'),
     ];
     secondWeekFriday = [
-      Person(name: 'Frans', picture: 'assets/jeffry.png'),
       Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Molly', picture: 'assets/cam.png'),
-      Person(name: 'Patton', picture: 'assets/adam_m.png'),
+      Person(name: 'Jeffry', picture: 'assets/Jeffry.png'),
+      Person(name: 'Molly', picture: 'assets/paton.png'),
     ];
 
     for (int week = 0; week < 104; week++) {
