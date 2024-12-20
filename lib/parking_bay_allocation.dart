@@ -462,40 +462,40 @@ class ScheduleProvider extends ChangeNotifier {
     DateTime endDate = DateTime(currentYear, 12, 09);
 
     List<Person> firstWeekMonday = [
-      Person(name: 'Kieran', picture: 'assets/kieran.png'),
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Stratton', picture: 'assets/stratton.png'),
-      Person(name: 'Frans', picture: 'assets/frans.png'),
+      kieran,
+      leah,
+      stratton,
+      frans,
     ];
     List<Person> firstWeekTuesday = [
-      Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Cam', picture: 'assets/cam.png'),
-      Person(name: 'Michelle', picture: 'assets/michelle.png'),
+      jeffry,
+      leah,
+      cam,
+      michelle,
     ];
     List<Person> firstWeekFriday = [
-      Person(name: 'Frans', picture: 'assets/frans.png'),
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Stratton', picture: 'assets/stratton.png'),
-      Person(name: 'Paton', picture: 'assets/adam_m.png'),
+      frans,
+      leah,
+      stratton,
+      paton,
     ];
     List<Person> secondWeekMonday = [
-      Person(name: 'Kieran', picture: 'assets/kieran.png'),
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Stratton', picture: 'assets/stratton.png'),
-      Person(name: 'Frans', picture: 'assets/frans.png'),
+      kieran,
+      leah,
+      stratton,
+      frans,
     ];
     List<Person> secondWeekTuesday = [
-      Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Cam', picture: 'assets/cam.png'),
-      Person(name: 'Michelle', picture: 'assets/michelle.png'),
+      jeffry,
+      leah,
+      cam,
+      michelle,
     ];
     List<Person> secondWeekFriday = [
-      Person(name: 'Jeffry', picture: 'assets/jeffry.png'),
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Cam', picture: 'assets/cam.png'),
-      Person(name: 'Molly', picture: 'assets/adam_m.png'),
+      jeffry,
+      leah,
+      cam,
+      molly,
     ];
 
     void addAllocations(DateTime monday, List<Person> mondayList,
@@ -579,34 +579,34 @@ class ScheduleProvider extends ChangeNotifier {
     }
 
     firstWeekMonday = [
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Frans', picture: 'assets/frans.png'),
-      Person(name: 'Stratton', picture: 'assets/stratton.png'),
+      leah,
+      frans,
+      stratton,
     ];
     firstWeekTuesday = [
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Kieran', picture: 'assets/kieran.png'),
-      Person(name: 'Michelle', picture: 'assets/michelle.png'),
+      leah,
+      kieran,
+      michelle,
     ];
     firstWeekFriday = [
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Jeffry', picture: 'assets/Jeffry.png'),
-      Person(name: 'Paton', picture: 'assets/paton.png'),
+      leah,
+      jeffry,
+      paton,
     ];
     secondWeekMonday = [
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Frans', picture: 'assets/frans.png'),
-      Person(name: 'Stratton', picture: 'assets/stratton.png'),
+      leah,
+      frans,
+      stratton,
     ];
     secondWeekTuesday = [
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Kieran', picture: 'assets/kieran.png'),
-      Person(name: 'Michelle', picture: 'assets/michelle.png'),
+      leah,
+      kieran,
+      michelle,
     ];
     secondWeekFriday = [
-      Person(name: 'Leah', picture: 'assets/leah.png'),
-      Person(name: 'Jeffry', picture: 'assets/Jeffry.png'),
-      Person(name: 'Molly', picture: 'assets/paton.png'),
+      leah,
+      jeffry,
+      molly,
     ];
 
     for (int week = 0; week < 104; week++) {
@@ -648,3 +648,17 @@ class Person {
     );
   }
 }
+
+// Define Person instances
+final Person leah = Person(name: 'Leah', picture: 'assets/leah.png');
+final Person frans = Person(name: 'Frans', picture: 'assets/frans.png');
+final Person stratton =
+    Person(name: 'Stratton', picture: 'assets/stratton.png');
+final Person kieran = Person(name: 'Kieran', picture: 'assets/kieran.png');
+final Person cam = Person(name: 'Cam', picture: 'assets/cam.png');
+final Person michelle =
+    Person(name: 'Michelle', picture: 'assets/michelle.png');
+final Person jeffry = Person(name: 'Jeffry', picture: 'assets/jeffry.png');
+final Person molly = Person(name: 'Molly', picture: 'assets/molly.png');
+final Person paton = Person(name: 'Paton', picture: 'assets/paton.png');
+final Person adam = Person(name: 'Adam', picture: 'assets/adam.png');
